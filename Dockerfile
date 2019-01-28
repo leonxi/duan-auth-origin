@@ -27,8 +27,8 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 COPY settings-docker.xml /usr/share/maven/ref/
 
-# Install DUAN-Zuul
-ARG DUAN_SOURCE_PATH="/opt/xiaoji/duan/duan-zuul"
+# Install DUAN-Auth-Origin
+ARG DUAN_SOURCE_PATH="/opt/xiaoji/duan/duan-auth-origin"
 
 RUN mkdir -p $DUAN_SOURCE_PATH
 
@@ -36,8 +36,9 @@ COPY ./* $DUAN_SOURCE_PATH/
 
 WORKDIR $DUAN_SOURCE_PATH
 
-RUN mvn clean package \
-  && mkdir $VERTICLE_HOME \
+RUN mvn clean package
+
+RUN mkdir $VERTICLE_HOME \
   && cp $DUAN_SOURCE_PATH/target/$VERTICLE_FILE $VERTICLE_HOME/$VERTICLE_FILE
   
 RUN rm -Rf $DUAN_SOURCE_PATH \
