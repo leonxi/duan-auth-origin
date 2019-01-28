@@ -1,5 +1,5 @@
 # Extend vert.x image
-FROM openjdk:8-jdk
+FROM vertx/vertx3
 MAINTAINER leon_xi@163.com
 
 #                                                       (1)
@@ -11,7 +11,7 @@ ENV VERTICLE_HOME /usr/verticles
 
 EXPOSE 8080
 
-ADD $VERTICLE_FILE $VERTICLE_HOME/
+ADD target/$VERTICLE_FILE $VERTICLE_HOME/
 ADD auo.json $VERTICLE_HOME/
 
 # Launch the verticle
