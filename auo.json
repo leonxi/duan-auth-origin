@@ -1,0 +1,4 @@
+{
+  "debug": false,
+  "mongo.host": "duan-mongo"
+}
