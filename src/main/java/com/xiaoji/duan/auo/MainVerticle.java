@@ -289,6 +289,7 @@ public class MainVerticle extends AbstractVerticle {
         String refreshToken = req.getParam("refresh_token");
         String grantType = req.getParam("grant_type");
 
+        System.out.println("Refresh token appId:" + appId + ", refreshToken:" + refreshToken + ", grantType:" + grantType);
         mongodb.findOne("auo_user_access",
 				new JsonObject()
 				.put("appid", appId)
@@ -303,7 +304,8 @@ public class MainVerticle extends AbstractVerticle {
 							Long accessTime = refreshTokenUser.getLong("access_time");
 							Long expiresIn = refreshTokenUser.getLong("expires_in");
 							
-							if (System.currentTimeMillis() > accessTime + expiresIn) {
+							if (System.currentTimeMillis() > accessTime + (expiresIn * 1000)) {
+						        System.out.println("Refresh token get failed for expired.");
 		        				ctx.response().end(new JsonObject().put("errcode", 10004).put("errmsg", "登录已失效,请重新登录.").encode());
 							} else {
 								refreshTokenUser.remove("_id");
@@ -316,9 +318,11 @@ public class MainVerticle extends AbstractVerticle {
 							}
 							
 						} else {
+					        System.out.println("Refresh token get failed for no matched user access.");
 	        				ctx.response().end(new JsonObject().put("errcode", 10003).put("errmsg", "Refresh token取得失败").encode());
 						}
 					} else {
+				        System.out.println("Refresh token get failed for query error.");
         				ctx.response().end(new JsonObject().put("errcode", 10003).put("errmsg", "Refresh token取得失败").encode());
 					}
 				});        
