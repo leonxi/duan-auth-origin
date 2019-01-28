@@ -42,9 +42,9 @@ RUN mvn clean package
 RUN mkdir -p $VERTICLE_HOME \
   && cp $DUAN_SOURCE_PATH/target/$VERTICLE_FILE $VERTICLE_HOME/$VERTICLE_FILE
   
-RUN rm -Rf $DUAN_SOURCE_PATH \
-  && rm -Rf /tmp \
-  && rm -Rf $USER_HOME_DIR/.m2
+#RUN rm -Rf $DUAN_SOURCE_PATH \
+#  && rm -Rf /tmp \
+#  && rm -Rf $USER_HOME_DIR/.m2
 
 EXPOSE 8080
 
