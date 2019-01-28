@@ -35,6 +35,7 @@ RUN mkdir -p $DUAN_SOURCE_PATH
 WORKDIR $DUAN_SOURCE_PATH
 
 COPY * ./
+COPY src ./src
 
 RUN mvn clean package
 
