@@ -1,5 +1,5 @@
 # Extend vert.x image
-FROM vertx/vertx3
+FROM openjdk:8-jdk
 MAINTAINER leon_xi@163.com
 
 #                                                       (1)
