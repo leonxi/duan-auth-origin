@@ -32,9 +32,9 @@ ARG DUAN_SOURCE_PATH="/opt/xiaoji/duan/duan-auth-origin"
 
 RUN mkdir -p $DUAN_SOURCE_PATH
 
-COPY ./* $DUAN_SOURCE_PATH/
-
 WORKDIR $DUAN_SOURCE_PATH
+
+COPY * .
 
 RUN mvn clean package
 
