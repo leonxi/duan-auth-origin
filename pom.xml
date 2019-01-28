@@ -24,7 +24,7 @@
     <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
     <junit-platform-launcher.version>1.2.0</junit-platform-launcher.version>
 
-    <main.verticle>com.xiaoji.duan.duan-auth-origin.MainVerticle</main.verticle>
+    <main.verticle>com.xiaoji.duan.auo.MainVerticle</main.verticle>
   </properties>
 
   <dependencyManagement>
