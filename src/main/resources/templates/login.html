@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="/auo/static/bootstrap/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+  crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<title>短应用&trade; 用户登录</title>
+</head>
+<body>
+<div class="container-fluid">
+<p></p>
+<div class="row">
+	<div class="col-12 d-flex justify-content-center">
+	<h1>短应用&trade; 用户登录</h1>
+	</div>
+</div>
+<p></p>
+<div class="row">
+<div class="d-flex justify-content-center w-100 align-items-center maxheight">
+	<form>
+    <input type="hidden" name="redirect_uri" id="redirect_uri" th:value="${oauth.redirecturi}">
+    <input type="hidden" name="state" id="state" th:value="${oauth.state}">
+    <input type="hidden" name="appid" id="appid" th:value="${oauth.appid}">
+    <input type="hidden" name="responsetype" id="responsetype" th:value="${oauth.responsetype}">
+    <input type="hidden" name="scope" id="scope" th:value="${oauth.scope}">
+	  <div class="form-group">
+	    <label for="useremail">邮件地址</label>
+	    <input type="email" class="form-control" id="useremail" aria-describedby="emailHelp" placeholder="sample@email.com" required>
+	    <small id="emailHelp" class="form-text text-muted">请使用在短应用&trade; 注册时使用的邮件地址登录本网站.</small>
+	  </div>
+	  <div class="form-group">
+	    <label for="userpassword">密码</label>
+	    <input type="password" class="form-control" id="userpassword" required>
+	  </div>
+    <button type="button" id="submit" class="btn btn-primary">登录</button>
+    <button type="button" id="register" class="btn btn-link">注册</button>
+	</form>
+</div>
+</div>
+</div>
+<script src="/auo/static/jquery/js/jquery.min.js"></script>
+<script src="/auo/static/bootstrap/js/bootstrap.min.js"
+  integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(function() {
+  var autoheight = function() {
+    var winHeight = $(window).innerHeight();
+    var exactHeight = 0;
+    var siblings = $(".maxheight").parent().siblings();
+    
+    for (var si in siblings) {
+      var sibling = siblings[si];
+      if (sibling.nodeName !== 'NAV' 
+          && sibling.nodeName !== 'DIV'
+            && sibling.nodeName !== 'P') {
+        continue;
+      }
+      
+      exactHeight += ($(sibling).outerHeight() === undefined ? 0 : $(sibling).outerHeight());
+    }
+    
+    $(".maxheight").css("height", (winHeight - exactHeight - (winHeight / 4)) + "px");
+  };
+  
+  $(window).resize(autoheight);
+  autoheight();
+  
+  var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
+
+  
+  var loginformcheck = function(form) {
+    var useremail = $(form).find("input#useremail").val();
+    var userpassword = $(form).find("input#userpassword").val();
+    var checked = true;
+    
+    if (useremail === undefined || useremail === '' || regEmail.test(useremail) == false) {
+      $(form).find("input#useremail").siblings('div.invalid-feedback').remove();
+      $(form).find("input#useremail").addClass("is-invalid");
+      $(form).find("input#useremail").after("<div class=\"invalid-feedback\">" +
+          "请输入正确的电子邮件地址, 例如: sample@email.com" +
+          "</div>");
+      checked = false;
+    } else {
+      $(form).find("input#useremail").siblings('div.invalid-feedback').remove();
+      $(form).find("input#useremail").removeClass("is-invalid");
+    }
+    
+    if (userpassword === undefined || userpassword === '') {
+      $(form).find("input#userpassword").siblings('div.invalid-feedback').remove();
+      $(form).find("input#userpassword").addClass("is-invalid");
+      $(form).find("input#userpassword").after("<div class=\"invalid-feedback\">" +
+          "请输入密码" +
+          "</div>");
+      checked = false;
+    } else {
+      $(form).find("input#userpassword").siblings('div.invalid-feedback').remove();
+      $(form).find("input#userpassword").removeClass("is-invalid");
+    }
+    
+    return checked;
+  }
+  
+  var loginform = function(form) {
+    $(form).find("button#register").bind("click", function() {
+      location.href = "/auo/register";
+    });
+    
+    $(form).find("button#submit").bind("click", function() {
+      var useremail = $(form).find("input#useremail").val();
+      var userpassword = $(form).find("input#userpassword").val();
+      var state = $(form).find("input#state").val();
+      var appid = $(form).find("input#appid").val();
+      var responsetype = $(form).find("input#responsetype").val();
+      var scope = $(form).find("input#scope").val();
+
+      var loginform = {
+          useremail: useremail,
+          userpassword: userpassword,
+          appid: appid,
+          responsetype: responsetype,
+          scope: scope,
+          state: state
+      };
+      
+      if (loginformcheck(form)) {
+        $.ajax({
+          url: "/auo/dologin",
+          type: "post",
+          dataType: "json",
+          data: JSON.stringify(loginform),
+          contentType: "application/json;charset=UTF-8",
+          success: function(resp) {
+            if (resp.code !== undefined && resp.state !== undefined) {
+              location.href = $("form #redirect_uri").val() + '?code=' + resp.code + '&state=' + resp.state;
+            } else {
+              $(form).find("input#useremail").siblings('div.invalid-feedback').remove();
+              $(form).find("input#useremail").addClass("is-invalid");
+              $(form).find("input#useremail").after("<div class=\"invalid-feedback\">" +
+                  "用户名不存在或者密码错误" +
+                  "</div>");
+
+              $(form).find("input#userpassword").siblings('div.invalid-feedback').remove();
+              $(form).find("input#userpassword").addClass("is-invalid");
+              $(form).find("input#userpassword").after("<div class=\"invalid-feedback\">" +
+                  "用户名不存在或者密码错误" +
+                  "</div>");
+
+            }
+          }
+        });
+      }
+    });
+  }
+  
+  loginform('form');
+});
+</script>
+</body>
+</html>
