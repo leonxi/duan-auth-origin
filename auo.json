@@ -1,4 +1,8 @@
 {
   "debug": false,
-  "mongo.host": "duan-mongo"
+  "mongo.host": "duan-mongo",
+  "apps.default.appid": "www.duan.com",
+  "apps.default.site": "www.duan.com",
+  "apps.default.secret": "secret@www.duan.com"
+  
 }
